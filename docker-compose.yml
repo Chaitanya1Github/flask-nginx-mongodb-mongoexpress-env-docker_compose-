@@ -3,7 +3,7 @@ version: "3"
 services:
   application:
     build:
-      context: https://github.com/Chaitanya1Github/flask-nginx-mongodb-mongoexpress-env-multipledockerimages-using-docker-compose-when-code-sits-on-git.git
+      context: https://github.com/Chaitanya1Github/flask-nginx-mongodb-mongoexpress-env-docker_compose-.git
       dockerfile: application/Dockerfile
     command: gunicorn --bind 0.0.0.0:5000 wsgi:app
     volumes:
@@ -15,7 +15,7 @@ services:
 
   nginx:
     build:
-      context: https://github.com/Chaitanya1Github/flask-nginx-mongodb-mongoexpress-env-multipledockerimages-using-docker-compose-when-code-sits-on-git.git
+      context: https://github.com/Chaitanya1Github/flask-nginx-mongodb-mongoexpress-env-docker_compose-.git
       dockerfile: nginx/Dockerfile
     ports:
       - "80:80"
