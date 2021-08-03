@@ -6,8 +6,8 @@ services:
       context: https://github.com/Chaitanya1Github/flask-nginx-mongodb-mongoexpress-env-docker_compose-.git
       dockerfile: application/Dockerfile
     command: gunicorn --bind 0.0.0.0:5000 wsgi:app
-    volumes:
-      - .:/code/
+    # volumes:
+    #   - .:/code/
     ports:
       - "5000:5000"
     links:
