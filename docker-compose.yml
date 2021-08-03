@@ -1,0 +1,54 @@
+version: "3"
+
+services:
+  application:
+    build:
+      context: https://github.com/Chaitanya1Github/flask-nginx-mongodb-mongoexpress-env-multipledockerimages-using-docker-compose-when-code-sits-on-git.git
+      dockerfile: application/Dockerfile
+    command: gunicorn --bind 0.0.0.0:5000 wsgi:app
+    volumes:
+      - .:/code/
+    ports:
+      - "5000:5000"
+    links:
+      - db
+
+  nginx:
+    build:
+      context: https://github.com/Chaitanya1Github/flask-nginx-mongodb-mongoexpress-env-multipledockerimages-using-docker-compose-when-code-sits-on-git.git
+      dockerfile: nginx/Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - application
+
+  db:
+    image: mongo:latest
+    hostname: localhost
+    environment:
+      # - MONGO_INITDB_DATABASE=emp_db
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-volume:/data/db
+
+  mongo-express:
+    image: "mongo-express"
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=db # db is a service
+      - ME_CONFIG_MONGODB_PORT=27017
+      - ME_CONFIG_MONGODB_ENABLE_ADMIN=true # Enable access to all databases as admin. if this is set to false, admin cannot see any database other than 'test'
+      # - ME_CONFIG_MONGODB_AUTH_DATABASE=emp_db
+      - ME_CONFIG_MONGODB_AUTH_USERNAME=${MONGO_ROOT_USER} # username to access mongodb database through mongo-express console
+      - ME_CONFIG_MONGODB_AUTH_PASSWORD=${MONGO_ROOT_PASSWORD} # password to access mongodb database through mongo-express console
+      - ME_CONFIG_BASICAUTH_USERNAME=${MONGOEXPRESS_LOGIN} # username to access mongo-express console
+      - ME_CONFIG_BASICAUTH_PASSWORD=${MONGOEXPRESS_PASSWORD} # password to access mongo-express console
+    depends_on:
+      - db
+    ports:
+      - "8081:8081"
+
+volumes:
+  mongo-volume:
